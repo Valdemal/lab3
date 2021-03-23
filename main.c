@@ -13,11 +13,6 @@ u_long get_bin_size(u_long n) {
     return i;
 }
 
-/* возвращает маску, содержащую n едениц в младших разрядах */
-u_long create_mask(u_long n) {
-    return ~(~0 << n);
-}
-
 // Выводит двоичную запись числа n
 void out_bin(u_long n) {
     if (n != 0) {
@@ -39,17 +34,13 @@ u_long get_replaced(u_long n, u_long entry) {
         return 0;
 
     u_long entry_bin_size = get_bin_size(entry);
-    u_long mask = create_mask(entry_bin_size);
 
     while (n >= entry) {
-        if ((n & mask) == entry) {
-            n &= ~mask;
-            mask <<= entry_bin_size;
+        if ((n & entry) == entry) {
+            n ^= entry;
             entry <<= entry_bin_size;
-        } else {
-            mask <<= 1;
+        } else
             entry <<= 1;
-        }
     }
 
     return n;
@@ -63,12 +54,11 @@ int main() {
     scanf("%ld", &n);
     printf("Ваше число: %ld в 2 СС : ", n);
     out_bin(n);
-    printf("\n%d", get_bin_size(-1));
     u_long result = get_replaced(n, 6);
     printf("\n");
     printf("Ваше число в 2 СС, в котором вхождения 110 заменены на 000: ");
     out_bin(result);
     printf("\n");
-    printf("Ваше число в 10 СС в котором вхождения 110 заменены на 000: %ld\n",
+    printf("Ваше число в 10 СС, в котором вхождения 110 заменены на 000: %ld\n",
            result);
 }
